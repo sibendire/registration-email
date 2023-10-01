@@ -1,11 +1,15 @@
 package com.registrationlogin.registration.appuser;
 
+import com.registrationlogin.registration.appregistration.tokens.TokenConfirmation;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -14,6 +18,7 @@ public class AppUserService implements UserDetailsService {
 
     private final AppUserRepository appUserRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private   TokenConfirmation tokenConfirmation;
 
     public AppUserService(AppUserRepository appUserRepository) {
         this.appUserRepository = appUserRepository;
@@ -38,6 +43,14 @@ public class AppUserService implements UserDetailsService {
         String encodedPassword = bCryptPasswordEncoder.encode(appUser.getPassword());
         appUser.setPassword(encodedPassword);
         appUserRepository.save(appUser);
+        String token =  UUID.randomUUID().toString();
+
+        TokenConfirmation tokenConfirmation =  new TokenConfirmation(
+                token,
+                LocalDateTime.now(),
+                LocalDateTime.now().plusMinutes(15),
+                appUser
+        );
         return "";
     }
 
