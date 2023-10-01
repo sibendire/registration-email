@@ -1,5 +1,6 @@
 package com.registrationlogin.registration.appuser;
 
+import com.registrationlogin.registration.appregistration.tokens.ConfirmationTokenService;
 import com.registrationlogin.registration.appregistration.tokens.TokenConfirmation;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +19,7 @@ public class AppUserService implements UserDetailsService {
 
     private final AppUserRepository appUserRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private   TokenConfirmation tokenConfirmation;
+    private    ConfirmationTokenService confirmationTokenService;
 
     public AppUserService(AppUserRepository appUserRepository) {
         this.appUserRepository = appUserRepository;
@@ -45,13 +46,16 @@ public class AppUserService implements UserDetailsService {
         appUserRepository.save(appUser);
         String token =  UUID.randomUUID().toString();
 
+
         TokenConfirmation tokenConfirmation =  new TokenConfirmation(
                 token,
                 LocalDateTime.now(),
                 LocalDateTime.now().plusMinutes(15),
                 appUser
         );
-        return "";
+        ConfirmationTokenService.saveConfirmation(tokenConfirmation);
+
+        return token;
     }
 
 
