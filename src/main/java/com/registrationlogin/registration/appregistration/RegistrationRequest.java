@@ -1,9 +1,11 @@
 package com.registrationlogin.registration.appregistration;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 
 @EqualsAndHashCode
+@Getter
 @ToString
 public class RegistrationRequest {
     private  final String firstName;

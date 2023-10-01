@@ -35,9 +35,7 @@ public class AppUser implements UserDetails {
                    String userName,
                    String email,
                    String password,
-                   AppUserRole appUserRole,
-                   boolean locked,
-                   boolean enabled) {
+                   AppUserRole appUserRole) {
         this.name = name;
         this.userName = userName;
         this.email = email;
