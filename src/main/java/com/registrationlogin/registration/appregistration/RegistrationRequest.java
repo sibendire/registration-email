@@ -4,10 +4,15 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 @EqualsAndHashCode
 @Getter
 @ToString
+@Entity
 public class RegistrationRequest {
+    @Id
     private  final String firstName;
     private  final String lastName;
     private  final String email;

@@ -57,5 +57,6 @@ public class RegistrationService {
         return "Confirm";
     }
     private String buildEmail(String firstName, String link) {
+        return firstName;
     }
 }

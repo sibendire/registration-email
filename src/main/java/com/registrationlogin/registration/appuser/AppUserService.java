@@ -18,14 +18,8 @@ public class AppUserService implements UserDetailsService {
     private final static String USER_NOT_FOUND = "user with email %s not found";
 
     private final AppUserRepository appUserRepository;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private    ConfirmationTokenService confirmationTokenService;
-
-    public AppUserService(AppUserRepository appUserRepository) {
-        this.appUserRepository = appUserRepository;
-
-
-    }
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final ConfirmationTokenService confirmationTokenService;
 
     @Override
     public UserDetails loadUserByUsername(String email)
@@ -35,30 +29,28 @@ public class AppUserService implements UserDetailsService {
     }
 
     public String signUpUser(AppUser appUser) {
-        boolean userExist = appUserRepository.findByEmail(appUser.getEmail())
-                .isPresent();
-        if (userExist) {
-            throw new IllegalStateException("User email already exist");
-
+        boolean userExists = appUserRepository.findByEmail(appUser.getEmail()).isPresent();
+        if (userExists) {
+            throw new IllegalStateException("User email already exists");
         }
+
         String encodedPassword = bCryptPasswordEncoder.encode(appUser.getPassword());
         appUser.setPassword(encodedPassword);
         appUserRepository.save(appUser);
-        String token =  UUID.randomUUID().toString();
 
-
-        TokenConfirmation tokenConfirmation =  new TokenConfirmation(
+        String token = UUID.randomUUID().toString();
+        TokenConfirmation tokenConfirmation = new TokenConfirmation(
                 token,
                 LocalDateTime.now(),
                 LocalDateTime.now().plusMinutes(15),
                 appUser
         );
-        ConfirmationTokenService.saveConfirmation(tokenConfirmation);
+        confirmationTokenService.saveConfirmation(tokenConfirmation);
 
         return token;
     }
 
-
     public void enableAppUser(String email) {
+        // Implement the logic to enable the user here
     }
 }

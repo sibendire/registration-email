@@ -22,15 +22,18 @@ public class EmailService implements EmailSender{
     public void send(String to, String email) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage,"utf-8");
-            mimeMessageHelper.setText(email,true);
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, "utf-8");
+            mimeMessageHelper.setText(email, true);
             mimeMessageHelper.setTo(to);
-            mimeMessageHelper.setSubject("confirm your email");
+            mimeMessageHelper.setSubject("Confirm your email");
             mimeMessageHelper.setFrom("sibendirejoshua@gmail.com");
 
-        }catch (MessagingException e){
-            LOGGER.error("failed to send the email ", e);
-        }throw new IllegalStateException("failed to send email");
-
+            // Send the email
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            LOGGER.error("Failed to send the email", e);
+            throw new IllegalStateException("Failed to send email", e);
+        }
     }
+
 }
